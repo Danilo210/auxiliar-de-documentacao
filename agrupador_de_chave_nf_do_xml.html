@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrator de Chaves XML</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            color: #1a1a1a;
+            text-align: center;
+        }
+        /* Estilizando o botão de upload */
+        .upload-label {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .upload-label:hover {
+            background-color: #0056b3;
+        }
+        /* Esconde o input de arquivo padrão */
+        #xml-upload {
+            display: none;
+        }
+        #file-info {
+            margin-top: 1rem;
+            font-style: italic;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 2.5rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        /* Estilo da lista de resultados */
+        #lista-chaves {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 1rem;
+            background-color: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        #lista-chaves li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        #lista-chaves li:last-child {
+            border-bottom: none;
+        }
+        /* Mensagem de "nenhuma chave" */
+        #lista-chaves.empty {
+            padding: 20px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Extrator de Chaves XML</h1>
+        
+        <label for="xml-upload" class="upload-label">
+            Clique para selecionar os arquivos XML
+        </label>
+        <input type="file" id="xml-upload" accept=".xml" multiple>
+        
+        <div id="file-info">Nenhum arquivo selecionado.</div>
+
+        <h2>Resultados (Números da tag &lt;chave&gt;):</h2>
+        
+        <ul id="lista-chaves" class="empty">Nenhuma chave encontrada ainda.</ul>
+
+    </div>
+
+    <script>
+        // Seleciona os elementos do HTML que vamos usar
+        const inputArquivo = document.getElementById('xml-upload');
+        const listaChaves = document.getElementById('lista-chaves');
+        const fileInfo = document.getElementById('file-info');
+
+        // Adiciona um "ouvinte" que espera o usuário selecionar os arquivos
+        inputArquivo.addEventListener('change', handleFiles);
+
+        function handleFiles(event) {
+            // Pega a lista de arquivos que o usuário selecionou
+            const files = event.target.files;
+            
+            // Limpa a lista de resultados anterior
+            listaChaves.innerHTML = '';
+            listaChaves.classList.add('empty');
+            
+            if (files.length === 0) {
+                fileInfo.textContent = 'Nenhum arquivo selecionado.';
+                listaChaves.innerHTML = 'Nenhuma chave encontrada ainda.';
+                return;
+            }
+
+            fileInfo.textContent = `${files.length} arquivo(s) selecionado(s). Processando...`;
+            let chavesEncontradas = 0;
+
+            // Loop para processar cada arquivo selecionado
+            for (const file of files) {
+                // O FileReader é usado para ler o conteúdo do arquivo
+                const reader = new FileReader();
+                
+                // Define o que fazer QUANDO o arquivo for lido
+                reader.onload = function(e) {
+                    const xmlText = e.target.result;
+                    
+                    // O DOMParser transforma o texto do XML em um documento que o JavaScript entende
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+                    
+                    // Procura TODAS as tags com o nome "chave" dentro do XML
+                    const chaves = xmlDoc.getElementsByTagName('chave');
+                    
+                    // Loop por todas as tags <chave> encontradas
+                    for (const chave of chaves) {
+                        // Pega o texto/número que está dentro da tag
+                        const numeroChave = chave.textContent;
+                        
+                        // Cria um novo item de lista (<li>)
+                        const li = document.createElement('li');
+                        li.textContent = numeroChave;
+                        
+                        // Adiciona o item na nossa lista de resultados
+                        listaChaves.appendChild(li);
+                        
+                        chavesEncontradas++;
+                    }
+                    
+                    // Atualiza o status
+                    if (chavesEncontradas > 0) {
+                        listaChaves.classList.remove('empty');
+                    } else if (listaChaves.innerHTML === '') { // Apenas se nenhum arquivo tiver adicionado chaves
+                        listaChaves.innerHTML = 'Nenhuma tag <chave> encontrada nos arquivos.';
+                    }
+                };
+                
+                // Inicia a leitura do arquivo como texto
+                reader.readAsText(file);
+            }
+        }
+    </script>
+
+</body>
+</html>

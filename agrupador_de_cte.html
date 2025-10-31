@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitor de 44 Números</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        color: #333;
+        text-align: center;
+        padding-top: 50px;
+    }
+    .container {
+        background: white;
+        width: 400px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+        width: 90%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        outline: none;
+        text-align: center;
+    }
+    #resultado {
+        margin-top: 20px;
+        padding: 10px;
+        font-size: 16px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        min-height: 40px;
+        word-wrap: break-word;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Separadode de numeros de CTe</h2>
+    <p>Digite 44 números e pressione Enter:</p>
+    <input type="text" id="entrada" maxlength="44" placeholder="Digite aqui...">
+    <div id="resultado"></div>
+</div>
+
+<script>
+    const entrada = document.getElementById("entrada");
+    const resultado = document.getElementById("resultado");
+    let lista = [];
+
+    entrada.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+            const numeros = entrada.value.trim();
+
+            if (!/^\d{44}$/.test(numeros)) {
+                alert("Digite exatamente 44 números!");
+                return;
+            }
+
+            // Extrai os dígitos 28° ao 34° (índices 27 a 33)
+            const parte = numeros.substring(27, 34);
+            lista.push(parte);
+
+            // Atualiza a lista separada por vírgulas
+            resultado.textContent = lista.join(", ");
+
+            // Limpa o campo
+            entrada.value = "";
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Operador</title>
+    
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column; 
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 40px; 
+        }
+
+        .container-botoes {
+            display: flex;
+            gap: 20px; 
+        }
+
+        .btn {
+            background-color: #007bff; 
+            color: white;
+            border: none;
+            
+            border-radius: 25px;
+            
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            background-color: #004085;
+            transform: scale(0.98);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Sistema auxiliar de CTE, NF e XML</h1>
+
+    <div class="container-botoes">
+        <a href="agrupador_de_cte.html">
+        <button class="btn" id="btn-agrupar-cte">
+            Agrupador de CTE
+        </button></a>
+        
+        <a href="agrupador_de_chave_nf_do_xml.html">
+        <button class="btn" id="btn-agrupar-nf">
+            Agrupador de chave NF
+        </button></a>
+    </div>
+
+
+</body>
+</html>
