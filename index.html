@@ -1,76 +1,194 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Operador</title>
-    
+    <title>Central Operacional Transportadora</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            min-height: 100vh;
+            background:
+                linear-gradient(rgba(0, 20, 40, 0.8),
+                    rgba(0, 20, 40, 0.8)),
+                url("https://images.unsplash.com/photo-1501706362039-c6e08f74d4c0?q=80&w=1920");
+            background-size: cover;
+            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column; 
+            color: white;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #ff9f1c;
         }
 
         h1 {
-            color: #333;
-            font-size: 2.5rem;
-            margin-bottom: 40px; 
+            font-size: 3rem;
+            margin-bottom: 10px;
         }
 
-        .container-botoes {
-            display: flex;
-            gap: 20px; 
+        .subtitulo {
+            color: #d6d6d6;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, .4);
+        }
+
+        .icone {
+            font-size: 3rem;
+            color: #ff9f1c;
+            margin-bottom: 20px;
+        }
+
+        .titulo-card {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            min-height: 60px;
         }
 
         .btn {
-            background-color: #007bff; 
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(135deg, #ff9f1c, #ff6f00);
             color: white;
-            border: none;
-            
-            border-radius: 25px;
-            
-            padding: 15px 30px;
-            font-size: 1rem;
+            padding: 12px 25px;
+            border-radius: 30px;
             font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: .3s;
         }
 
         .btn:hover {
-            background-color: #0056b3;
             transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 159, 28, .5);
         }
 
-        .btn:active {
-            background-color: #004085;
-            transform: scale(0.98);
+        footer {
+            margin-top: 40px;
+            color: #bbb;
+            font-size: 0.9rem;
         }
-
     </style>
 </head>
+
 <body>
 
-    <h1>Sistema auxiliar</h1>
+    <div class="container">
 
-    <div class="container-botoes">
-        <a href="agrupador_de_cte.html">
-        <button class="btn" id="btn-agrupar-cte">
-            Leia a chave do CTE para agrupa-la
-        </button></a>
-        
-        <a href="agrupador_de_chave_nf_do_xml.html">
-        <button class="btn" id="btn-agrupar-nf">
-            Extraixa a chave da NF pelo XML do CTE
-        </button></a>
+        <div class="logo">
+            <i class="fas fa-truck-fast"></i>
+        </div>
+
+        <h1>Central Operacional</h1>
+
+        <p class="subtitulo">
+            Ferramentas auxiliares para operações logísticas e transporte
+        </p>
+
+        <div class="grid">
+
+            <div class="card">
+                <div class="icone">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+
+                <div class="titulo-card">
+                    Agrupar chaves de CT-e
+                </div>
+
+                <a href="agrupador_de_cte.html" class="btn">
+                    Acessar
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="icone">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+
+                <div class="titulo-card">
+                    Extrair chave NF-e do XML do CT-e
+                </div>
+
+                <a href="agrupador_de_chave_nf_do_xml.html" class="btn">
+                    Acessar
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="icone">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+
+                <div class="titulo-card">
+                    Unir arquivos PDF
+                </div>
+
+                <a href="unir_pdf.html" class="btn">
+                    Acessar
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="icone">
+                    <i class="fas fa-hashtag"></i>
+                </div>
+
+                <div class="titulo-card">
+                    Formatador de números
+                </div>
+
+                <a href="formatar_numero.html" class="btn">
+                    Acessar
+                </a>
+            </div>
+
+        </div>
+
+        <footer>
+            Sistema Auxiliar de Transporte • Versão 1.0
+        </footer>
+
     </div>
-
 
 </body>
 
