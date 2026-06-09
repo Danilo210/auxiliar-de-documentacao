@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Unificador de PDFs</title>
+
+<!-- PDF-LIB -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+<style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+        background:#0f172a;
+        color:white;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        min-height:100vh;
+        padding:20px;
+    }
+
+    .container{
+        width:100%;
+        max-width:800px;
+        background:#1e293b;
+        border-radius:20px;
+        padding:30px;
+        box-shadow:0 0 30px rgba(0,0,0,0.4);
+    }
+
+    h1{
+        text-align:center;
+        margin-bottom:10px;
+        font-size:32px;
+    }
+
+    .manual{
+        text-align:center;
+        color:#cbd5e1;
+        margin-bottom:30px;
+        line-height:1.6;
+    }
+
+    .upload-area{
+        border:2px dashed #3b82f6;
+        border-radius:15px;
+        padding:40px;
+        text-align:center;
+        margin-bottom:20px;
+        transition:0.3s;
+    }
+
+    .upload-area:hover{
+        background:#334155;
+    }
+
+    input[type=file]{
+        display:none;
+    }
+
+    .btn{
+        border:none;
+        padding:15px 25px;
+        border-radius:12px;
+        cursor:pointer;
+        font-size:16px;
+        font-weight:bold;
+        transition:0.3s;
+    }
+
+    .btn-add{
+        background:#3b82f6;
+        color:white;
+    }
+
+    .btn-add:hover{
+        background:#2563eb;
+    }
+
+    .btn-merge{
+        background:#10b981;
+        color:white;
+        width:100%;
+        margin-top:20px;
+    }
+
+    .btn-merge:hover{
+        background:#059669;
+    }
+
+    .lista{
+        margin-top:20px;
+        max-height:300px;
+        overflow:auto;
+    }
+
+    .item{
+        background:#334155;
+        padding:12px;
+        border-radius:10px;
+        margin-bottom:10px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .remove{
+        background:#ef4444;
+        border:none;
+        color:white;
+        padding:8px 12px;
+        border-radius:8px;
+        cursor:pointer;
+    }
+
+    .remove:hover{
+        background:#dc2626;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📄 Unificador de PDFs</h1>
+
+    <div class="manual">
+        1. Adicione os PDFs<br>
+        2. Clique em "UNIR PDFs"<br>
+        3. O download será iniciado automaticamente
+    </div>
+
+    <div class="upload-area">
+
+        <label class="btn btn-add">
+            Selecionar PDFs
+            <input type="file" id="pdfInput" multiple accept=".pdf">
+        </label>
+
+    </div>
+
+    <div class="lista" id="listaPDFs"></div>
+
+    <button class="btn btn-merge" onclick="unirPDFs()">
+        UNIR PDFs
+    </button>
+
+</div>
+
+<script>
+
+    let arquivosPDF = [];
+
+    const input = document.getElementById('pdfInput');
+    const lista = document.getElementById('listaPDFs');
+
+    // =========================================
+    // ADICIONAR PDFs
+    // =========================================
+
+    input.addEventListener('change', (e) => {
+
+        for(let arquivo of e.target.files){
+
+            arquivosPDF.push(arquivo);
+
+        }
+
+        atualizarLista();
+
+    });
+
+    // =========================================
+    // ATUALIZAR LISTA
+    // =========================================
+
+    function atualizarLista(){
+
+        lista.innerHTML = "";
+
+        arquivosPDF.forEach((arquivo, index) => {
+
+            lista.innerHTML += `
+                <div class="item">
+                    <span>${arquivo.name}</span>
+
+                    <button class="remove"
+                        onclick="removerPDF(${index})">
+                        Remover
+                    </button>
+                </div>
+            `;
+
+        });
+
+    }
+
+    // =========================================
+    // REMOVER PDF
+    // =========================================
+
+    function removerPDF(index){
+
+        arquivosPDF.splice(index, 1);
+
+        atualizarLista();
+
+    }
+
+    // =========================================
+    // UNIR PDFs
+    // =========================================
+
+    async function unirPDFs(){
+
+        if(arquivosPDF.length === 0){
+
+            alert("Adicione pelo menos um PDF.");
+
+            return;
+        }
+
+        const pdfFinal = await PDFLib.PDFDocument.create();
+
+        for(let arquivo of arquivosPDF){
+
+            const bytes = await arquivo.arrayBuffer();
+
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+
+            const paginas = await pdfFinal.copyPages(
+                pdf,
+                pdf.getPageIndices()
+            );
+
+            paginas.forEach((pagina) => {
+
+                pdfFinal.addPage(pagina);
+
+            });
+
+        }
+
+        // GERA PDF FINAL
+        const pdfBytes = await pdfFinal.save();
+
+        // DOWNLOAD
+        const blob = new Blob(
+            [pdfBytes],
+            { type: 'application/pdf' }
+        );
+
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'PDF_UNIFICADO.pdf';
+
+        a.click();
+
+        URL.revokeObjectURL(url);
+
+    }
+
+</script>
+
+</body>
+</html>
